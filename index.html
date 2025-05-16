@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>重み付きサイコロ（重複なし）</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      max-width: 400px;
+      margin: auto;
+    }
+    input {
+      width: 50px;
+      margin-right: 10px;
+    }
+    .dice-row {
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>重み付きサイコロ（4回、重複なし）</h2>
+
+  <div class="dice-row"><label>1: <input type="number" id="w1" value="1" min="0"></label></div>
+  <div class="dice-row"><label>2: <input type="number" id="w2" value="1" min="0"></label></div>
+  <div class="dice-row"><label>3: <input type="number" id="w3" value="1" min="0"></label></div>
+  <div class="dice-row"><label>4: <input type="number" id="w4" value="1" min="0"></label></div>
+  <div class="dice-row"><label>5: <input type="number" id="w5" value="1" min="0"></label></div>
+  <div class="dice-row"><label>6: <input type="number" id="w6" value="1" min="0"></label></div>
+
+  <button onclick="roll()">4回振る（重複なし）</button>
+
+  <p id="result">出目: -</p>
+
+  <script>
+    function roll() {
+      const weights = [
+        parseInt(document.getElementById("w1").value || 0),
+        parseInt(document.getElementById("w2").value || 0),
+        parseInt(document.getElementById("w3").value || 0),
+        parseInt(document.getElementById("w4").value || 0),
+        parseInt(document.getElementById("w5").value || 0),
+        parseInt(document.getElementById("w6").value || 0)
+      ];
+      const numbers = [1, 2, 3, 4, 5, 6];
+
+      // 利用可能な（重み > 0 の）数値を抽出
+      const available = numbers.filter((num, i) => weights[i] > 0);
+
+      if (available.length < 4) {
+        document.getElementById("result").innerText = "重みが0でない数が4つ未満です。";
+        return;
+      }
+
+      const selected = [];
+
+      let tempNumbers = [...numbers];
+      let tempWeights = [...weights];
+
+      for (let draw = 0; draw < 4; draw++) {
+        const totalWeight = tempWeights.reduce((a, b) => a + b, 0);
+        let r = Math.random() * totalWeight;
+        let chosenIndex = -1;
+
+        for (let i = 0; i < tempNumbers.length; i++) {
+          if (r < tempWeights[i]) {
+            chosenIndex = i;
+            break;
+          }
+          r -= tempWeights[i];
+        }
+
+        if (chosenIndex === -1) break; // 保険
+
+        selected.push(tempNumbers[chosenIndex]);
+
+        // 選ばれた要素を削除（重複を防ぐ）
+        tempNumbers.splice(chosenIndex, 1);
+        tempWeights.splice(chosenIndex, 1);
+      }
+
+      document.getElementById("result").innerText = "出目: " + selected.join(", ");
+    }
+  </script>
+</body>
+</html>
