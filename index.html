@@ -2,45 +2,86 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>重み付きサイコロ（重複なし）</title>
+  <title>重み付きサイコロ（4回・重複なし）</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: sans-serif;
       padding: 20px;
-      max-width: 400px;
       margin: auto;
+      max-width: 500px;
+      background-color: #f9f9f9;
     }
-    input {
-      width: 50px;
-      margin-right: 10px;
+
+    h2 {
+      font-size: 1.4em;
+      margin-bottom: 1em;
+      text-align: center;
     }
+
+    .dice-inputs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
     .dice-row {
+      width: 48%;
       margin-bottom: 10px;
     }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1em;
     }
+
+    input[type="number"] {
+      width: 60px;
+      padding: 5px;
+      font-size: 1em;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      font-size: 1.1em;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
     #result {
       margin-top: 20px;
-      font-size: 20px;
-      font-weight: bold;
+      font-size: 1.5em;
+      text-align: center;
+      color: #333;
     }
   </style>
 </head>
 <body>
-  <h2>重み付きサイコロ（4回、重複なし）</h2>
+  <h2>重み付きサイコロ（4回・重複なし）</h2>
 
-  <div class="dice-row"><label>1: <input type="number" id="w1" value="1" min="0"></label></div>
-  <div class="dice-row"><label>2: <input type="number" id="w2" value="1" min="0"></label></div>
-  <div class="dice-row"><label>3: <input type="number" id="w3" value="1" min="0"></label></div>
-  <div class="dice-row"><label>4: <input type="number" id="w4" value="1" min="0"></label></div>
-  <div class="dice-row"><label>5: <input type="number" id="w5" value="1" min="0"></label></div>
-  <div class="dice-row"><label>6: <input type="number" id="w6" value="1" min="0"></label></div>
+  <div class="dice-inputs">
+    <div class="dice-row"><label>1: <input type="number" id="w1" value="1" min="0"></label></div>
+    <div class="dice-row"><label>2: <input type="number" id="w2" value="1" min="0"></label></div>
+    <div class="dice-row"><label>3: <input type="number" id="w3" value="1" min="0"></label></div>
+    <div class="dice-row"><label>4: <input type="number" id="w4" value="1" min="0"></label></div>
+    <div class="dice-row"><label>5: <input type="number" id="w5" value="1" min="0"></label></div>
+    <div class="dice-row"><label>6: <input type="number" id="w6" value="1" min="0"></label></div>
+  </div>
 
   <button onclick="roll()">4回振る（重複なし）</button>
 
-  <p id="result">出目: -</p>
+  <div id="result">出目: -</div>
 
   <script>
     function roll() {
@@ -54,16 +95,13 @@
       ];
       const numbers = [1, 2, 3, 4, 5, 6];
 
-      // 利用可能な（重み > 0 の）数値を抽出
       const available = numbers.filter((num, i) => weights[i] > 0);
-
       if (available.length < 4) {
         document.getElementById("result").innerText = "重みが0でない数が4つ未満です。";
         return;
       }
 
       const selected = [];
-
       let tempNumbers = [...numbers];
       let tempWeights = [...weights];
 
@@ -80,11 +118,9 @@
           r -= tempWeights[i];
         }
 
-        if (chosenIndex === -1) break; // 保険
+        if (chosenIndex === -1) break;
 
         selected.push(tempNumbers[chosenIndex]);
-
-        // 選ばれた要素を削除（重複を防ぐ）
         tempNumbers.splice(chosenIndex, 1);
         tempWeights.splice(chosenIndex, 1);
       }
