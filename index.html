@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>重み付きサイコロ（4回・重複なし）</title>
+  <title>重み付きサイコロ（5回・重複なし）</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -68,7 +68,7 @@
   </style>
 </head>
 <body>
-  <h2>重み付きサイコロ（4回・重複なし）</h2>
+  <h2>重み付きサイコロ（5回・重複なし）</h2>
 
   <div class="dice-inputs">
     <div class="dice-row"><label>1: <input type="number" id="w1" value="1" min="0"></label></div>
@@ -77,6 +77,7 @@
     <div class="dice-row"><label>4: <input type="number" id="w4" value="1" min="0"></label></div>
     <div class="dice-row"><label>5: <input type="number" id="w5" value="1" min="0"></label></div>
     <div class="dice-row"><label>6: <input type="number" id="w6" value="1" min="0"></label></div>
+    <div class="dice-row"><label>7: <input type="number" id="w7" value="1" min="0"></label></div>
   </div>
 
   <button onclick="roll()">4回振る（重複なし）</button>
@@ -97,12 +98,13 @@
         parseInt(document.getElementById("w3").value || 0),
         parseInt(document.getElementById("w4").value || 0),
         parseInt(document.getElementById("w5").value || 0),
-        parseInt(document.getElementById("w6").value || 0)
+        parseInt(document.getElementById("w6").value || 0),
+	parseInt(document.getElementById("w7").value || 0)
       ];
-      const numbers = [1, 2, 3, 4, 5, 6];
+      const numbers = [1, 2, 3, 4, 5, 6, 7];
 
       const available = numbers.filter((num, i) => weights[i] > 0);
-      if (available.length < 4) {
+      if (available.length < 5) {
         document.getElementById("result").innerText = "重みが0でない数が4つ未満です。";
         return;
       }
@@ -111,7 +113,7 @@
       let tempNumbers = [...numbers];
       let tempWeights = [...weights];
 
-      for (let draw = 0; draw < 4; draw++) {
+      for (let draw = 0; draw < 5; draw++) {
         const totalWeight = tempWeights.reduce((a, b) => a + b, 0);
         let r = Math.random() * totalWeight;
         let chosenIndex = -1;
